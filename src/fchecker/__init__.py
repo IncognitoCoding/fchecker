@@ -12,7 +12,9 @@ from .file_checks import file_check
 from .common import InputFailure, InvalidKeyError
 
 __all__ = [
-    'dict_checks',
-    'type_checks',
-    'file_checks'
+    'KeyCheck',
+    'type_check',
+    'file_check',
+    'InputFailure',
+    'InvalidKeyError'
 ]

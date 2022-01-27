@@ -53,11 +53,25 @@ class KeyCheck():
             \t\\- Reverses the key check exception output, so the\\
             \t   expected result and returned results are flipped.\\
             \t\\- Defaults to False.
+
+        Raises:
+            FAttributeError (fexception):\\
+            \t\\- No key(s) were sent.
+            FAttributeError (fexception):\\
+            \t\\- The input keys have inconsistent value and requirement keys.\\
+            FAttributeError (fexception):\\
+            \t\\- The required key list contains duplicate keys. All keys must be unique.\\
+            InvalidKeyError (fexception):\\
+            \t\\- The dictionary key (\'{no_matching_key}\')\\
+            \t  does not exist in the expected required key(s).
         """
         self._required_keys = required_keys
         self._all_key_check = False
         self.reverse_output = reverse_output
-        self._key_validation()
+        try:
+            self._key_validation()
+        except (InvalidKeyError, FAttributeError):
+            raise
 
     def all_keys(self, required_keys: Union[str, list], reverse_output: Optional[bool] = False) -> None:
         """
@@ -71,11 +85,25 @@ class KeyCheck():
             \t\\- Reverses the key check exception output, so the\\
             \t   expected result and returned results are flipped.\\
             \t\\- Defaults to False.
+
+        Raises:
+            FAttributeError (fexception):\\
+            \t\\- No key(s) were sent.
+            FAttributeError (fexception):\\
+            \t\\- The input keys have inconsistent value and requirement keys.\\
+            FAttributeError (fexception):\\
+            \t\\- The required key list contains duplicate keys. All keys must be unique.\\
+            InvalidKeyError (fexception):\\
+            \t\\- The dictionary key (\'{no_matching_key}\')\\
+            \t  does not exist in the expected required key(s).
         """
         self._required_keys = required_keys
         self._all_key_check = True
         self.reverse_output = reverse_output
-        self._key_validation()
+        try:
+            self._key_validation()
+        except (InvalidKeyError, FAttributeError):
+            raise
 
     def _key_validation(self) -> None:
         """

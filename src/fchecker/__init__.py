@@ -2,7 +2,7 @@ __author__ = 'IncognitoCoding'
 __copyright__ = 'Copyright 2022, fchecker'
 __credits__ = ['IncognitoCoding']
 __license__ = 'GPL'
-__version__ = '0.3'
+__version__ = '0.4'
 __maintainer__ = 'IncognitoCoding'
 __status__ = 'Beta'
 

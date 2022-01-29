@@ -291,4 +291,4 @@ class KeyCheck():
                 'line': inspect.currentframe().f_back.f_back.f_lineno,
                 'tb_remove': 'validation_director'
             }
-            raise FCustomException(exc_args, tb_limit=None, caller_override=caller_override)
+            raise InvalidKeyError(FCustomException(exc_args, tb_limit=None, caller_override=caller_override))

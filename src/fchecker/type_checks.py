@@ -73,7 +73,7 @@ def type_check(value: any, required_type: Union[type, list],
                 'line': inspect.currentframe().f_back.f_lineno,
                 'tb_remove': 'type_checks'
             }
-            raise FCustomException(exc_args, tb_limit=None, caller_override=caller_override)
+            raise InputFailure(FCustomException(exc_args, tb_limit=None, caller_override=caller_override))
         else:
             override_module = caller_override.get('module')
             override_name = caller_override.get('name')

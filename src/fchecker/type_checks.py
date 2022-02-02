@@ -35,7 +35,7 @@ def type_check(value: any, required_type: Union[type, list],
         \t\\- Defaults to None.
         msg_override (str, optional):
         \t\\- Main top-level message override.\\
-        \t\\= The expected and returned results will be the same.\\
+        \t\\- The expected and returned results will be the same.\\
         \t\\- Ideal for type checks for other importing files such as YAML.\\
         \t\\- Defaults to None.
 

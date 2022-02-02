@@ -6,6 +6,14 @@ from typing import Optional
 from fexception import FFileNotFoundError
 from .type_checks import type_check
 
+__author__ = 'IncognitoCoding'
+__copyright__ = 'Copyright 2022, file_checks'
+__credits__ = ['IncognitoCoding']
+__license__ = 'MIT'
+__version__ = '0.0.6'
+__maintainer__ = 'IncognitoCoding'
+__status__ = 'Beta'
+
 
 def file_check(file_path: str, file_description: Optional[str] = None) -> None:
     """

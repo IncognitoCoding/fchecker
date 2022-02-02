@@ -6,6 +6,14 @@ from pathlib import Path
 from fexception import FCustomException, FAttributeError, FTypeError
 from .common import InputFailure
 
+__author__ = 'IncognitoCoding'
+__copyright__ = 'Copyright 2022, type_checks'
+__credits__ = ['IncognitoCoding']
+__license__ = 'MIT'
+__version__ = '0.0.6'
+__maintainer__ = 'IncognitoCoding'
+__status__ = 'Beta'
+
 
 def type_check(value: any, required_type: Union[type, list],
                caller_override: dict = None, msg_override: str = None) -> None:

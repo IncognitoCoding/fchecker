@@ -7,6 +7,14 @@ from fexception import FCustomException, FAttributeError
 from .type_checks import type_check
 from .common import InvalidKeyError
 
+__author__ = 'IncognitoCoding'
+__copyright__ = 'Copyright 2022, dict_checks'
+__credits__ = ['IncognitoCoding']
+__license__ = 'MIT'
+__version__ = '0.0.6'
+__maintainer__ = 'IncognitoCoding'
+__status__ = 'Beta'
+
 
 class KeyCheck():
     """
@@ -39,7 +47,7 @@ class KeyCheck():
                 'tb_remove': 'dict_checks'}
         )
 
-        self._values = values
+        self.__values = values
 
     def contains_keys(self, required_keys: Union[str, list], reverse_output: Optional[bool] = False) -> None:
         """
@@ -65,11 +73,11 @@ class KeyCheck():
             \t\\- The dictionary key (\'{no_matching_key}\')\\
             \t  does not exist in the expected required key(s).
         """
-        self._required_keys = required_keys
-        self._all_key_check = False
-        self.reverse_output = reverse_output
+        self.__required_keys = required_keys
+        self.__all_key_check = False
+        self.__reverse_output = reverse_output
         try:
-            self._key_validation()
+            self.__key_validation()
         except (InvalidKeyError, FAttributeError):
             raise
 
@@ -97,15 +105,15 @@ class KeyCheck():
             \t\\- The dictionary key (\'{no_matching_key}\')\\
             \t  does not exist in the expected required key(s).
         """
-        self._required_keys = required_keys
-        self._all_key_check = True
-        self.reverse_output = reverse_output
+        self.__required_keys = required_keys
+        self.__all_key_check = True
+        self.__reverse_output = reverse_output
         try:
-            self._key_validation()
+            self.__key_validation()
         except (InvalidKeyError, FAttributeError):
             raise
 
-    def _key_validation(self) -> None:
+    def __key_validation(self) -> None:
         """
         Performs the key validation.
 
@@ -122,7 +130,7 @@ class KeyCheck():
         """
 
         type_check(
-            self._required_keys,
+            self.__required_keys,
             [str, list],
             # Caller override two calls before.
             caller_override={
@@ -133,20 +141,20 @@ class KeyCheck():
         )
 
         # Loops through to find any keys that do not match.
-        dict_keys = list(self._values.keys())
+        dict_keys = list(self.__values.keys())
 
         # Reverses key results for flipped reverse checks.
-        if self.reverse_output:
+        if self.__reverse_output:
             expected_key_result = dict_keys
-            required_key_result = self._required_keys
+            required_key_result = self.__required_keys
         else:
-            expected_key_result = self._required_keys
+            expected_key_result = self.__required_keys
             required_key_result = dict_keys
 
         # Checks for that required keys are sent.
-        if not self._required_keys:
+        if not self.__required_keys:
             # Formats the output based on the check option.
-            if self._all_key_check:
+            if self.__all_key_check:
                 expected_result = f'  - Expected Key(s) = {expected_key_result}'
             else:
                 expected_result = f'  - Expected Match Option Key(s) = {dict_keys}'
@@ -166,15 +174,15 @@ class KeyCheck():
             raise FAttributeError(exc_args, tb_limit=None, caller_override=caller_override)
 
         # Checks for 1:1 input when using the all_keys option.
-        if self._all_key_check:
+        if self.__all_key_check:
             mismatched_input: bool
-            if isinstance(self._required_keys, list):
-                if len(dict_keys) != len(self._required_keys):
+            if isinstance(self.__required_keys, list):
+                if len(dict_keys) != len(self.__required_keys):
                     mismatched_input = True
                 else:
                     mismatched_input = False
             else:
-                if len(self._values) > 1:
+                if len(self.__values) > 1:
                     mismatched_input = True
                 else:
                     mismatched_input = False
@@ -197,11 +205,11 @@ class KeyCheck():
             mismatched_input = False
 
         # Checks for duplicate values.
-        if isinstance(self._required_keys, list):
-            if len(self._required_keys) != len(set(self._required_keys)):
+        if isinstance(self.__required_keys, list):
+            if len(self.__required_keys) != len(set(self.__required_keys)):
                 exc_args = {
                     'main_message': 'The required key list contains duplicate keys. All keys must be unique.',
-                    'returned_result': f'Required Key(s) = {self._required_keys}'
+                    'returned_result': f'Required Key(s) = {self.__required_keys}'
                 }
                 # Caller override two calls before.
                 caller_override = {
@@ -231,12 +239,12 @@ class KeyCheck():
         # but the first no-match in the list of keys.
         sorted_dict_keys = sorted(dict_keys, reverse=True)
 
-        if isinstance(self._required_keys, list):
-            for required_key in self._required_keys:
+        if isinstance(self.__required_keys, list):
+            for required_key in self.__required_keys:
                 # Checks if the validation requires all the required keys
                 # to match all sorted_dict_keys or the required keys to match
                 # some of the sorted_dict_keys.
-                if self._all_key_check:
+                if self.__all_key_check:
                     for dict_key in sorted_dict_keys:
                         # Checks for exact match.
                         if required_key == dict_key:
@@ -255,7 +263,7 @@ class KeyCheck():
                     break
         else:
             # Variable name swap for easier loop reading.
-            required_key: str = self._required_keys
+            required_key: str = self.__required_keys
             for dict_key in sorted_dict_keys:
                 if required_key == dict_key:
                     # Checks for exact match.
@@ -267,7 +275,7 @@ class KeyCheck():
         # Checks if a no matching key exists, to output the error
         if no_matching_key:
             # Formats the output based on the check option.
-            if self._all_key_check:
+            if self.__all_key_check:
                 main_message = (f'The dictionary key (\'{no_matching_key}\') '
                                 'does not exist in the expected required key(s).\n')
                 expected_result = f'Expected Key(s) = {expected_key_result}'

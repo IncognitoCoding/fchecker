@@ -1,16 +1,19 @@
-import inspect
+# Built-in/Generic Imports
 import pathlib
-from pathlib import Path
 from typing import Optional
 
-from fexception import FFileNotFoundError
+# Local Functions
 from .type_checks import type_check
+
+# Exceptions
+from fexception import FFileNotFoundError
+
 
 __author__ = 'IncognitoCoding'
 __copyright__ = 'Copyright 2022, file_checks'
 __credits__ = ['IncognitoCoding']
 __license__ = 'MIT'
-__version__ = '0.0.6'
+__version__ = '0.0.7'
 __maintainer__ = 'IncognitoCoding'
 __status__ = 'Beta'
 
@@ -36,49 +39,23 @@ def file_check(file_path: str, file_description: Optional[str] = None) -> None:
         FFileNotFoundError (fexception):
         \t\\- The file does not exist in the validating file path ({file_path}).
     """
-    type_check(
-        file_path,
-        str,
-        # Caller override two calls before.
-        caller_override={
-            'module': Path(inspect.currentframe().f_back.f_back.f_code.co_filename).stem,
-            'name': inspect.currentframe().f_back.f_back.f_code.co_name,
-            'line': inspect.currentframe().f_back.f_back.f_lineno,
-            'tb_remove': 'file_checks'}
-    )
-
+    type_check(value=file_path, required_type=str, tb_remove_name='file_checks')
     if file_description:
-        type_check(
-            file_description,
-            str,
-            # Caller override two calls before.
-            caller_override={
-                'module': Path(inspect.currentframe().f_back.f_back.f_code.co_filename).stem,
-                'name': inspect.currentframe().f_back.f_back.f_code.co_name,
-                'line': inspect.currentframe().f_back.f_back.f_lineno,
-                'tb_remove': 'file_checks'}
-        )
+        type_check(value=file_description, required_type=str, tb_remove_name='file_checks')
 
     # Checks if the file does not exist
-    file = pathlib.Path(file_path)
+    file: pathlib.Path = pathlib.Path(file_path)
     if not file.exists():
         # Sets message based on description choice.
         if file_description:
-            exc_args = {
+            exc_args: dict = {
                 'main_message': f'The file ({file_description}) does not exist '
                                 f'in the validating file path ({file_path}).',
                 'suggested_resolution': 'Ensure the file path is the correct path to your file.'
             }
         else:
-            exc_args = {
+            exc_args: dict = {
                 'main_message': f'The file does not exist in the validating file path ({file_path}).',
                 'suggested_resolution': 'Ensure the file path is the correct path to your file.'
             }
-        # Caller override two calls before.
-        caller_override = {
-            'module': Path(inspect.currentframe().f_back.f_back.f_code.co_filename).stem,
-            'name': inspect.currentframe().f_back.f_back.f_code.co_name,
-            'line': inspect.currentframe().f_back.f_back.f_lineno,
-            'tb_remove': 'file_checks'
-        }
-        raise FFileNotFoundError(exc_args, tb_limit=None, caller_override=caller_override)
+        raise FFileNotFoundError(message_args=exc_args, tb_limit=None, tb_remove_name='file_check')

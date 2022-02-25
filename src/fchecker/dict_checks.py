@@ -1,17 +1,21 @@
+# Built-in/Generic Imports
 from typing import Optional, Union
-import inspect
-from pathlib import Path
 
-# Own modules
-from fexception import FCustomException, FAttributeError
+# Local Functions
 from .type_checks import type_check
+
+# Local Exceptions
 from .common import InvalidKeyError
 
+# Exceptions
+from fexception import (FCustomException,
+                        FAttributeError)
+
 __author__ = 'IncognitoCoding'
-__copyright__ = 'Copyright 2022, dict_checks'
+__copyright__ = 'Copyright 2022, KeyCheck'
 __credits__ = ['IncognitoCoding']
 __license__ = 'MIT'
-__version__ = '0.0.6'
+__version__ = '0.0.7'
 __maintainer__ = 'IncognitoCoding'
 __status__ = 'Beta'
 
@@ -36,18 +40,9 @@ class KeyCheck():
         \t\t\\- A template can be used with the reverse option enabled.
     """
     def __init__(self, values: dict) -> None:
-        type_check(
-            values,
-            dict,
-            # Caller override two calls before.
-            caller_override={
-                'module': Path(inspect.currentframe().f_back.f_back.f_code.co_filename).stem,
-                'name': inspect.currentframe().f_back.f_back.f_code.co_name,
-                'line': inspect.currentframe().f_back.f_back.f_lineno,
-                'tb_remove': 'dict_checks'}
-        )
+        type_check(value=values, required_type=dict, tb_remove_name='dict_check')
 
-        self.__values = values
+        self.__values: dict = values
 
     def contains_keys(self, required_keys: Union[str, list], reverse_output: Optional[bool] = False) -> None:
         """
@@ -73,9 +68,11 @@ class KeyCheck():
             \t\\- The dictionary key (\'{no_matching_key}\')\\
             \t  does not exist in the expected required key(s).
         """
-        self.__required_keys = required_keys
-        self.__all_key_check = False
-        self.__reverse_output = reverse_output
+        type_check(value=required_keys, required_type=[str, list], tb_remove_name='contains_keys')
+
+        self.__required_keys: Union[str, list] = required_keys
+        self.__all_key_check: bool = False
+        self.__reverse_output: bool = reverse_output
         try:
             self.__key_validation()
         except (InvalidKeyError, FAttributeError):
@@ -105,9 +102,11 @@ class KeyCheck():
             \t\\- The dictionary key (\'{no_matching_key}\')\\
             \t  does not exist in the expected required key(s).
         """
-        self.__required_keys = required_keys
-        self.__all_key_check = True
-        self.__reverse_output = reverse_output
+        type_check(value=required_keys, required_type=[str, list], tb_remove_name='all_keys')
+
+        self.__required_keys: Union[str, list] = required_keys
+        self.__all_key_check: bool = True
+        self.__reverse_output: bool = reverse_output
         try:
             self.__key_validation()
         except (InvalidKeyError, FAttributeError):
@@ -128,50 +127,31 @@ class KeyCheck():
             \t\\- The dictionary key (\'{no_matching_key}\')\\
             \t  does not exist in the expected required key(s).
         """
-
-        type_check(
-            self.__required_keys,
-            [str, list],
-            # Caller override two calls before.
-            caller_override={
-                'module': Path(inspect.currentframe().f_back.f_back.f_code.co_filename).stem,
-                'name': inspect.currentframe().f_back.f_back.f_code.co_name,
-                'line': inspect.currentframe().f_back.f_back.f_lineno,
-                'tb_remove': 'dict_checks'}
-        )
-
         # Loops through to find any keys that do not match.
         dict_keys = list(self.__values.keys())
 
         # Reverses key results for flipped reverse checks.
         if self.__reverse_output:
-            expected_key_result = dict_keys
-            required_key_result = self.__required_keys
+            expected_key_result: list = dict_keys
+            required_key_result: Union[str, list] = self.__required_keys
         else:
-            expected_key_result = self.__required_keys
-            required_key_result = dict_keys
+            expected_key_result: Union[str, list] = self.__required_keys
+            required_key_result: list = dict_keys
 
         # Checks for that required keys are sent.
         if not self.__required_keys:
             # Formats the output based on the check option.
             if self.__all_key_check:
-                expected_result = f'  - Expected Key(s) = {expected_key_result}'
+                expected_result: str = f'  - Expected Key(s) = {expected_key_result}'
             else:
-                expected_result = f'  - Expected Match Option Key(s) = {dict_keys}'
+                expected_result: str = f'  - Expected Match Option Key(s) = {dict_keys}'
 
             exc_args = {
                 'main_message': 'No key(s) were sent.',
                 'expected_result': expected_result,
                 'returned_result': None
             }
-            # Caller override two calls before.
-            caller_override = {
-                'module': Path(inspect.currentframe().f_back.f_back.f_code.co_filename).stem,
-                'name': inspect.currentframe().f_back.f_back.f_code.co_name,
-                'line': inspect.currentframe().f_back.f_back.f_lineno,
-                'tb_remove': 'validation_director'
-            }
-            raise FAttributeError(exc_args, tb_limit=None, caller_override=caller_override)
+            raise FAttributeError(message_args=exc_args, tb_limit=None, tb_remove_name='__key_validation')
 
         # Checks for 1:1 input when using the all_keys option.
         if self.__all_key_check:
@@ -184,61 +164,31 @@ class KeyCheck():
             else:
                 if len(self.__values) > 1:
                     mismatched_input = True
-                else:
-                    mismatched_input = False
 
             if mismatched_input is True:
-                exc_args = {
+                exc_args: dict = {
                     'main_message': 'The input keys have inconsistent value and requirement keys.',
                     'expected_result': f'Required Key(s) = {expected_key_result}',
                     'returned_result': f'Failed Key(s) = {required_key_result}'
                 }
-                # Caller override two calls before.
-                caller_override = {
-                    'module': Path(inspect.currentframe().f_back.f_back.f_code.co_filename).stem,
-                    'name': inspect.currentframe().f_back.f_back.f_code.co_name,
-                    'line': inspect.currentframe().f_back.f_back.f_lineno,
-                    'tb_remove': 'validation_director'
-                }
-                raise FAttributeError(exc_args, tb_limit=None, caller_override=caller_override)
+                raise FAttributeError(message_args=exc_args, tb_limit=None, tb_remove_name='__key_validation')
         else:
             mismatched_input = False
 
         # Checks for duplicate values.
         if isinstance(self.__required_keys, list):
             if len(self.__required_keys) != len(set(self.__required_keys)):
-                exc_args = {
+                exc_args: dict = {
                     'main_message': 'The required key list contains duplicate keys. All keys must be unique.',
                     'returned_result': f'Required Key(s) = {self.__required_keys}'
                 }
-                # Caller override two calls before.
-                caller_override = {
-                    'module': Path(inspect.currentframe().f_back.f_back.f_code.co_filename).stem,
-                    'name': inspect.currentframe().f_back.f_back.f_code.co_name,
-                    'line': inspect.currentframe().f_back.f_back.f_lineno,
-                    'tb_remove': 'validation_director'
-                }
-                raise FAttributeError(exc_args, tb_limit=None, caller_override=caller_override)
-
-        if isinstance(dict_keys, list):
-            if len(dict_keys) != len(set(dict_keys)):
-                exc_args = {
-                    'main_message': 'The expected key list contains duplicate keys. All keys must be unique.',
-                    'returned_result': f'Expected Key(s) = {dict_keys}'
-                }
-                # Caller override two calls before.
-                caller_override = {
-                    'module': Path(inspect.currentframe().f_back.f_back.f_code.co_filename).stem,
-                    'name': inspect.currentframe().f_back.f_back.f_code.co_name,
-                    'line': inspect.currentframe().f_back.f_back.f_lineno,
-                    'tb_remove': 'validation_director'
-                }
-                raise FAttributeError(exc_args, None, caller_override)
+                raise FAttributeError(message_args=exc_args, tb_limit=None, tb_remove_name='__key_validation')
 
         # Sets the keys in reverse order so the no-match is the last entry checked
         # but the first no-match in the list of keys.
         sorted_dict_keys = sorted(dict_keys, reverse=True)
 
+        no_matching_key: str = None
         if isinstance(self.__required_keys, list):
             for required_key in self.__required_keys:
                 # Checks if the validation requires all the required keys
@@ -276,27 +226,20 @@ class KeyCheck():
         if no_matching_key:
             # Formats the output based on the check option.
             if self.__all_key_check:
-                main_message = (f'The dictionary key (\'{no_matching_key}\') '
-                                'does not exist in the expected required key(s).\n')
-                expected_result = f'Expected Key(s) = {expected_key_result}'
-                returned_result = f'Failed Key(s) = {required_key_result}'
+                main_message: str = (f'The dictionary key (\'{no_matching_key}\') '
+                                     'does not exist in the expected required key(s).\n')
+                expected_result: str = f'Expected Key(s) = {expected_key_result}'
+                returned_result: str = f'Failed Key(s) = {required_key_result}'
             else:
-                main_message = (f'The dictionary key (\'{no_matching_key}\') '
-                                'does not match any expected match option key(s).\n')
-                expected_result = f'Match Option Key(s) = {expected_key_result}'
-                returned_result = f'Failed Key(s) = {required_key_result}'
+                main_message: str = (f'The dictionary key (\'{no_matching_key}\') '
+                                     'does not match any expected match option key(s).\n')
+                expected_result: str = f'Match Option Key(s) = {expected_key_result}'
+                returned_result: str = f'Failed Key(s) = {required_key_result}'
 
-            exc_args = {
+            exc_args: dict = {
                 'main_message': main_message,
                 'custom_type': InvalidKeyError,
                 'expected_result': expected_result,
                 'returned_result': returned_result
             }
-            # Caller override two calls before.
-            caller_override = {
-                'module': Path(inspect.currentframe().f_back.f_back.f_code.co_filename).stem,
-                'name': inspect.currentframe().f_back.f_back.f_code.co_name,
-                'line': inspect.currentframe().f_back.f_back.f_lineno,
-                'tb_remove': 'validation_director'
-            }
-            raise InvalidKeyError(FCustomException(exc_args, tb_limit=None, caller_override=caller_override))
+            raise InvalidKeyError(FCustomException(message_args=exc_args, tb_limit=None, tb_remove_name='__key_validation'))

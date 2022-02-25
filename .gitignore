@@ -20,3 +20,5 @@ __pycache__/
 .cache/*
 .*.swp
 .DS_Store
+.*coverage
+htmlcov/

@@ -4,8 +4,14 @@ import pytest
 # Functions
 from fchecker import type_check
 
-# Exception
-from fexception import FTypeError
+
+__author__ = 'IncognitoCoding'
+__copyright__ = 'Copyright 2022, test_type_checks'
+__credits__ = ['IncognitoCoding']
+__license__ = 'MIT'
+__version__ = '0.1'
+__maintainer__ = 'IncognitoCoding'
+__status__ = 'Development'
 
 
 # ############################################################
@@ -67,6 +73,15 @@ def test_2_1_type_check():
 
 def test_2_2_type_check():
     """
+    Tests incorrect input issues with msg_override.
+    """
+    with pytest.raises(Exception) as excinfo:
+        type_check(value=None, required_type=int, msg_override='The required employee data was not sent.')
+    assert """The required employee data was not sent.""" in str(excinfo.value)
+
+
+def test_2_3_type_check():
+    """
     Tests type check validation failure.
     """
     with pytest.raises(Exception) as excinfo:
@@ -74,7 +89,7 @@ def test_2_2_type_check():
     assert """The value '1' is not in <class 'str'> format""" in str(excinfo.value)
 
 
-def test_2_3_type_check():
+def test_2_4_type_check():
     """
     Tests type check validation failure.
     """
@@ -83,7 +98,7 @@ def test_2_3_type_check():
     assert """The value '1' is not in [<class 'str'>, <class 'bool'>] format.""" in str(excinfo.value)
 
 
-def test_2_4_type_check():
+def test_2_5_type_check():
     """
     Tests type check validation failure.
     """
@@ -93,13 +108,13 @@ def test_2_4_type_check():
     assert 'Incorrect (<Sample Key>) YAML value.' in str(excinfo.value)
 
 
-def test_2_5_type_check():
+def test_2_6_type_check():
     """
     Tests type check validation failure with traceback alteration.
     """
     with pytest.raises(Exception) as excinfo:
         msg_override = 'Incorrect (<Sample Key>) YAML value.'
-        type_check(value=1, required_type=str, tb_remove_name='test_2_5_type_check', msg_override=msg_override)
+        type_check(value=1, required_type=str, tb_remove_name='test_2_6_type_check', msg_override=msg_override)
     assert 'Incorrect (<Sample Key>) YAML value.' in str(excinfo.value)
     # If pytest updates there modules these outputs could change.
     assert """<class 'str'>""" in str(excinfo.value)

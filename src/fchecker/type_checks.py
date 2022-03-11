@@ -9,7 +9,7 @@ __author__ = 'IncognitoCoding'
 __copyright__ = 'Copyright 2022, type_check'
 __credits__ = ['IncognitoCoding']
 __license__ = 'MIT'
-__version__ = '0.0.7'
+__version__ = '0.0.8'
 __maintainer__ = 'IncognitoCoding'
 __status__ = 'Beta'
 
@@ -44,6 +44,8 @@ def type_check(value: any, required_type: Union[type, list],
         FAttributeError (fexception):
         \t\\- The value \'{value}\' sent is not an accepted input.
         FAttributeError (fexception):
+        \t\\- A user defined msg_override message.
+        FAttributeError (fexception):
         \t\\- No type or list of types has been entered for type validation.
         FTypeError (fexception):
         \t\\- The value \'{value}\' is not in {required_type} format.
@@ -53,8 +55,13 @@ def type_check(value: any, required_type: Union[type, list],
         value is None
         or value == ''
     ):
+        # Sets message override if one is provided.
+        if msg_override:
+            main_message: str = msg_override
+        else:
+            main_message: str = f'The value \'{value}\' sent is not an accepted input.'
         exc_args: dict = {
-            'main_message': f'The value \'{value}\' sent is not an accepted input.',
+            'main_message': main_message,
             'expected_result': 'Any value other than None or an empty string',
             'returned_result': type(value)
         }

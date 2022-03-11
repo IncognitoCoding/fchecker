@@ -21,6 +21,10 @@ def type_check(value: any, required_type: Union[type, list],
 
     Raises a cleanly formatted reason if the type validation is unsuccessful.
 
+    None value will return different exceptions based on msg_override.\\
+    \t\\- No msg_override = FAttributeError\\
+    \t\\- msg_override = FTypeError
+
     No return output.
 
     Args:
@@ -43,7 +47,7 @@ def type_check(value: any, required_type: Union[type, list],
     Raises:
         FAttributeError (fexception):
         \t\\- The value \'{value}\' sent is not an accepted input.
-        FAttributeError (fexception):
+        FTypeError (fexception):
         \t\\- A user defined msg_override message.
         FAttributeError (fexception):
         \t\\- No type or list of types has been entered for type validation.
@@ -57,17 +61,23 @@ def type_check(value: any, required_type: Union[type, list],
     ):
         # Sets message override if one is provided.
         if msg_override:
-            main_message: str = msg_override
+            exc_args: dict = {
+                'main_message': msg_override,
+                'expected_result': 'Any value other than None or an empty string',
+                'returned_result': type(value)
+            }
+            if not tb_remove_name:
+                tb_remove_name = 'type_check'
+            raise FTypeError(message_args=exc_args, tb_limit=None, tb_remove_name=tb_remove_name)
         else:
-            main_message: str = f'The value \'{value}\' sent is not an accepted input.'
-        exc_args: dict = {
-            'main_message': main_message,
-            'expected_result': 'Any value other than None or an empty string',
-            'returned_result': type(value)
-        }
-        if not tb_remove_name:
-            tb_remove_name = 'type_check'
-        raise FAttributeError(message_args=exc_args, tb_limit=None, tb_remove_name=tb_remove_name)
+            exc_args: dict = {
+                'main_message': f'The value \'{value}\' sent is not an accepted input.',
+                'expected_result': 'Any value other than None or an empty string',
+                'returned_result': type(value)
+            }
+            if not tb_remove_name:
+                tb_remove_name = 'type_check'
+            raise FAttributeError(message_args=exc_args, tb_limit=None, tb_remove_name=tb_remove_name)
 
     # Verifies a type or list is sent.
     if (

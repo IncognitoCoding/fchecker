@@ -15,7 +15,7 @@ __author__ = 'IncognitoCoding'
 __copyright__ = 'Copyright 2022, KeyCheck'
 __credits__ = ['IncognitoCoding']
 __license__ = 'MIT'
-__version__ = '0.0.7'
+__version__ = '0.0.8'
 __maintainer__ = 'IncognitoCoding'
 __status__ = 'Beta'
 
@@ -40,7 +40,7 @@ class KeyCheck():
         \t\t\\- A template can be used with the reverse option enabled.
     """
     def __init__(self, values: dict) -> None:
-        type_check(value=values, required_type=dict, tb_remove_name='dict_check')
+        type_check(value=values, required_type=dict, tb_remove_name='__init__')
 
         self.__values: dict = values
 
@@ -58,6 +58,12 @@ class KeyCheck():
             \t\\- Defaults to False.
 
         Raises:
+            FTypeError (fexception):
+            \t\\- The value '{required_keys}' is not in <class 'str'> or <class 'list'> format.\\
+            FTypeError (fexception):
+            \t\\- The value '{reverse_output}' is not in <class 'bool'> format.\\
+
+        Nested Raises:
             FAttributeError (fexception):\\
             \t\\- No key(s) were sent.
             FAttributeError (fexception):\\
@@ -69,14 +75,14 @@ class KeyCheck():
             \t  does not exist in the expected required key(s).
         """
         type_check(value=required_keys, required_type=[str, list], tb_remove_name='contains_keys')
+        if reverse_output:
+            type_check(value=reverse_output, required_type=bool, tb_remove_name='contains_keys')
 
         self.__required_keys: Union[str, list] = required_keys
         self.__all_key_check: bool = False
         self.__reverse_output: bool = reverse_output
-        try:
-            self.__key_validation()
-        except (InvalidKeyError, FAttributeError):
-            raise
+
+        self.__key_validation()
 
     def all_keys(self, required_keys: Union[str, list], reverse_output: Optional[bool] = False) -> None:
         """
@@ -92,6 +98,12 @@ class KeyCheck():
             \t\\- Defaults to False.
 
         Raises:
+            FTypeError (fexception):
+            \t\\- The value '{required_keys}' is not in <class 'str'> or <class 'list'> format.\\
+            FTypeError (fexception):
+            \t\\- The value '{reverse_output}' is not in <class 'bool'> format.\\
+
+        Nested Raises:
             FAttributeError (fexception):\\
             \t\\- No key(s) were sent.
             FAttributeError (fexception):\\
@@ -103,14 +115,14 @@ class KeyCheck():
             \t  does not exist in the expected required key(s).
         """
         type_check(value=required_keys, required_type=[str, list], tb_remove_name='all_keys')
+        if reverse_output:
+            type_check(value=reverse_output, required_type=bool, tb_remove_name='all_keys')
 
         self.__required_keys: Union[str, list] = required_keys
         self.__all_key_check: bool = True
         self.__reverse_output: bool = reverse_output
-        try:
-            self.__key_validation()
-        except (InvalidKeyError, FAttributeError):
-            raise
+
+        self.__key_validation()
 
     def __key_validation(self) -> None:
         """
@@ -151,7 +163,10 @@ class KeyCheck():
                 'expected_result': expected_result,
                 'returned_result': None
             }
-            raise FAttributeError(message_args=exc_args, tb_limit=None, tb_remove_name='__key_validation')
+            if self.__all_key_check is True:
+                raise FAttributeError(message_args=exc_args, tb_limit=None, tb_remove_name='all_keys')
+            else:
+                raise FAttributeError(message_args=exc_args, tb_limit=None, tb_remove_name='contains_keys')
 
         # Checks for 1:1 input when using the all_keys option.
         if self.__all_key_check:
@@ -171,7 +186,7 @@ class KeyCheck():
                     'expected_result': f'Required Key(s) = {expected_key_result}',
                     'returned_result': f'Failed Key(s) = {required_key_result}'
                 }
-                raise FAttributeError(message_args=exc_args, tb_limit=None, tb_remove_name='__key_validation')
+                raise FAttributeError(message_args=exc_args, tb_limit=None, tb_remove_name='all_keys')
         else:
             mismatched_input = False
 
@@ -182,7 +197,10 @@ class KeyCheck():
                     'main_message': 'The required key list contains duplicate keys. All keys must be unique.',
                     'returned_result': f'Required Key(s) = {self.__required_keys}'
                 }
-                raise FAttributeError(message_args=exc_args, tb_limit=None, tb_remove_name='__key_validation')
+                if self.__all_key_check is True:
+                    raise FAttributeError(message_args=exc_args, tb_limit=None, tb_remove_name='all_keys')
+                else:
+                    raise FAttributeError(message_args=exc_args, tb_limit=None, tb_remove_name='contains_keys')
 
         # Sets the keys in reverse order so the no-match is the last entry checked
         # but the first no-match in the list of keys.
@@ -242,4 +260,7 @@ class KeyCheck():
                 'expected_result': expected_result,
                 'returned_result': returned_result
             }
-            raise InvalidKeyError(FCustomException(message_args=exc_args, tb_limit=None, tb_remove_name='__key_validation'))
+            if self.__all_key_check is True:
+                raise InvalidKeyError(FCustomException(message_args=exc_args, tb_limit=None, tb_remove_name='all_keys'))
+            else:
+                raise InvalidKeyError(FCustomException(message_args=exc_args, tb_limit=None, tb_remove_name='contains_keys'))

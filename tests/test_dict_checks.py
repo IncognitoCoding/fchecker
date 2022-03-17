@@ -9,7 +9,7 @@ __author__ = 'IncognitoCoding'
 __copyright__ = 'Copyright 2022, test_dict_checks'
 __credits__ = ['IncognitoCoding']
 __license__ = 'MIT'
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 __maintainer__ = 'IncognitoCoding'
 __status__ = 'Beta'
 
@@ -96,7 +96,7 @@ def test_2_2_keycheck():
 
 def test_2_3_keycheck():
     """
-    Tests duplicate key input issues.
+    Tests no key input issues.
     """
     with pytest.raises(Exception) as excinfo:
         key_check = KeyCheck(values={'Green': None, 'Blue': None, 'Red': None})
@@ -107,7 +107,7 @@ def test_2_3_keycheck():
 
 def test_2_4_keycheck():
     """
-    Tests duplicate key input issues.
+    Tests no key input issues.
     """
     with pytest.raises(Exception) as excinfo:
         key_check = KeyCheck(values={'Green': None, 'Blue': None, 'Red': None})
@@ -116,7 +116,17 @@ def test_2_4_keycheck():
     assert """Expected Match Option Key(s) = ['Green', 'Blue', 'Red'""" in str(excinfo.value)
 
 
-def test_2_5_reverse_keycheck():
+def test_2_5_keycheck():
+    """
+    Tests duplicate key input issues.
+    """
+    with pytest.raises(Exception) as excinfo:
+        key_check = KeyCheck(values={'Green': None, 'Blue': None, 'Red': None})
+        key_check.all_keys(required_keys=['Yellow', 'Blue', 'Blue'])
+    assert 'The required key list contains duplicate keys. All keys must be unique.' in str(excinfo.value)
+
+
+def test_2_6_reverse_keycheck():
     """
     Tests duplicate key input issues.
     """
@@ -126,7 +136,7 @@ def test_2_5_reverse_keycheck():
     assert 'The required key list contains duplicate keys. All keys must be unique.' in str(excinfo.value)
 
 
-def test_2_6_reverse_keycheck():
+def test_2_7_reverse_keycheck():
     """
     Tests duplicate key input issues.
     """
@@ -137,7 +147,7 @@ def test_2_6_reverse_keycheck():
     assert """Expected Key(s) = ['Green', 'Blue', 'Red']""" in str(excinfo.value)
 
 
-def test_2_7_reverse_keycheck():
+def test_2_8_reverse_keycheck():
     """
     Tests duplicate key input issues.
     """
@@ -148,7 +158,7 @@ def test_2_7_reverse_keycheck():
     assert """Required Key(s) = ['Green', 'Blue', 'Red']""" in str(excinfo.value)
 
 
-def test_2_8_keycheck() -> None:
+def test_2_9_keycheck() -> None:
     """
     Tests key check validation failure.
     """
@@ -160,7 +170,7 @@ def test_2_8_keycheck() -> None:
     assert """Failed Key(s) = ['key1', 'key3']""" in str(excinfo.value)
 
 
-def test_2_9_keycheck() -> None:
+def test_2_10_keycheck() -> None:
     """
     Tests key check validation failure.
     """
@@ -170,7 +180,7 @@ def test_2_9_keycheck() -> None:
     assert """Match Option Key(s) = ['key5']""" in str(excinfo.value)
 
 
-def test_2_10_keycheck():
+def test_2_11_keycheck():
     """
     Tests key check validation failure.
     """
@@ -180,7 +190,7 @@ def test_2_10_keycheck():
     assert """Expected Key(s) = ['key1', 'key2']""" in str(excinfo.value)
 
 
-def test_2_11_reverse_keycheck():
+def test_2_12_reverse_keycheck():
     """
     Tests reverse key check validation failure.
     """
@@ -190,7 +200,7 @@ def test_2_11_reverse_keycheck():
     assert """Expected Key(s) = ['key1', 'key3']""" in str(excinfo.value)
 
 
-def test_2_12_reverse_keycheck():
+def test_2_13_reverse_keycheck():
     """
     Tests reverse key check validation failure.
     """

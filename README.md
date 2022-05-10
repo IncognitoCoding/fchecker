@@ -12,7 +12,7 @@ Returned exceptions are formatted using [fexception](https://pypi.org/project/fe
 Description
 ===========
 
-Python's general checks return True or False when a check result gets returned. fchecker removes the True or False return and throws a cleanly written exception when a check does not pass. fchecker checks many different Python checks and adds the ability to wrap a clean formatted structure around the returned exception.
+Python's general checks return True or False when a check result gets returned. fchecker not only offers the ability to return True or False but, by default, throws a cleanly written exception when a check does not pass.. fchecker checks many different Python checks and adds the ability to wrap a clean formatted structure around the returned exception.
 
 Available Checks
 ================

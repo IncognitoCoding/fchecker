@@ -134,7 +134,7 @@ class KeyCheck:
             tuple[Union[int, float, bool, str]],
             tuple[Union[int, float, bool, str, tuple[Union[int, float, bool, str]]], ...],
         ],
-        reverse_output=False,
+        reverse_output: bool = False,
     ) -> Union[InvalidKeyError, bool]:
         """
         Checks if all required keys exist in the dictionary

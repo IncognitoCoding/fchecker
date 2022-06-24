@@ -13,7 +13,7 @@ __author__ = "IncognitoCoding"
 __copyright__ = "Copyright 2022, file_checks"
 __credits__ = ["IncognitoCoding"]
 __license__ = "MIT"
-__version__ = "0.0.8"
+__version__ = "0.0.9"
 __maintainer__ = "IncognitoCoding"
 __status__ = "Beta"
 
@@ -64,7 +64,7 @@ def file_check(
 
     # Checks if the file does not exist
     file: pathlib.Path = pathlib.Path(file_path)
-    print(file)
+
     if not file.exists():
         if enforce:
             # Sets message based on description choice.

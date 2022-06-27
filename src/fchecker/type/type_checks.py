@@ -8,7 +8,7 @@ __author__ = "IncognitoCoding"
 __copyright__ = "Copyright 2022, type_check"
 __credits__ = ["IncognitoCoding"]
 __license__ = "MIT"
-__version__ = "0.0.9"
+__version__ = "0.0.10"
 __maintainer__ = "IncognitoCoding"
 __status__ = "Beta"
 
@@ -127,7 +127,7 @@ def type_check(
         # Bool is a subclass of int.
         # This forces the variable bool to match the bool and not an integer.
         if "<class 'bool'>" == str(type(value)):
-            if "<class 'bool'>" == str(required_type):
+            if "<class 'bool'>" in str(required_type):
                 matching_type_flag = True
             else:
                 matching_type_flag = False

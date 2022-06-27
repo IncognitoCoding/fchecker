@@ -51,6 +51,13 @@ def test_1_4_type_check():
     """
     Tests type check success.
     """
+    type_check(value=True, required_type=(int, bool))
+
+
+def test_1_5_type_check():
+    """
+    Tests type check success.
+    """
     msg_override = "Incorrect (<Sample Key>) YAML value."
     type_check(value=1, required_type=int, tb_remove_name=None, msg_override=msg_override)
 

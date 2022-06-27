@@ -124,7 +124,15 @@ def type_check(
 
     matching_type_flag: bool = False
     if isinstance(value, required_type):
-        matching_type_flag = True
+        # Bool is a subclass of int.
+        # This forces the variable bool to match the bool and not an integer.
+        if "<class 'bool'>" == str(type(value)):
+            if "<class 'bool'>" == str(required_type):
+                matching_type_flag = True
+            else:
+                matching_type_flag = False
+        else:
+            matching_type_flag = True
     else:
         # Gives the option to return standard bool or an exception.
         if enforce:

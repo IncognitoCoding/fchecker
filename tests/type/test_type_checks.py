@@ -44,6 +44,13 @@ def test_1_3_type_check():
     """
     Tests type check success.
     """
+    type_check(value=True, required_type=bool)
+
+
+def test_1_4_type_check():
+    """
+    Tests type check success.
+    """
     msg_override = "Incorrect (<Sample Key>) YAML value."
     type_check(value=1, required_type=int, tb_remove_name=None, msg_override=msg_override)
 
@@ -122,12 +129,38 @@ def test_2_6_type_check():
     Tests type check validation failure.
     """
     with pytest.raises(Exception) as excinfo:
+        type_check(value=True, required_type=int)
+    assert """The object value 'True' is not an instance of the required class(es) or subclass(es).""" in str(
+        excinfo.value
+    )
+    assert """<class 'int'>""" in str(excinfo.value)
+    assert """<class 'bool'>""" in str(excinfo.value)
+
+
+def test_2_7_type_check():
+    """
+    Tests type check validation failure.
+    """
+    with pytest.raises(Exception) as excinfo:
+        type_check(value=1, required_type=bool)
+    assert """The object value '1' is not an instance of the required class(es) or subclass(es).""" in str(
+        excinfo.value
+    )
+    assert """<class 'bool'>""" in str(excinfo.value)
+    assert """<class 'int'>""" in str(excinfo.value)
+
+
+def test_2_8_type_check():
+    """
+    Tests type check validation failure.
+    """
+    with pytest.raises(Exception) as excinfo:
         msg_override = "Incorrect (<Sample Key>) YAML value."
         type_check(value=1, required_type=str, tb_remove_name=None, msg_override=msg_override)
     assert "Incorrect (<Sample Key>) YAML value." in str(excinfo.value)
 
 
-def test_2_7_type_check():
+def test_2_9_type_check():
     """
     Tests type check validation failure. Tests with enforcing disabled.
     """
@@ -136,13 +169,13 @@ def test_2_7_type_check():
     assert False is check
 
 
-def test_2_8_type_check():
+def test_2_10_type_check():
     """
     Tests type check validation failure with traceback alteration.
     """
     with pytest.raises(Exception) as excinfo:
         msg_override = "Incorrect (<Sample Key>) YAML value."
-        type_check(value=1, required_type=str, tb_remove_name="test_2_8_type_check", msg_override=msg_override)
+        type_check(value=1, required_type=str, tb_remove_name="test_2_10_type_check", msg_override=msg_override)
     assert "Incorrect (<Sample Key>) YAML value." in str(excinfo.value)
     # If pytest updates there modules these outputs could change.
     assert """<class 'str'>""" in str(excinfo.value)
